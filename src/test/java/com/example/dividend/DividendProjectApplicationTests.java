@@ -6,6 +6,7 @@ class DividendProjectApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
