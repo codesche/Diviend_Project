@@ -14,7 +14,6 @@ import org.jsoup.select.Elements;
 
 public class YahooFinanceScraper {
 
-    // URL을 정적 메서드로 구현
     private static final String STATISTICS_URL = "https://finance.yahoo.com/%s/"
         + "history?period1=%d&period2=%d&interval=1mo";
 
