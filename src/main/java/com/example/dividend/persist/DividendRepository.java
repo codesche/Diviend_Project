@@ -1,5 +1,6 @@
-package com.example.dividend.persist.entity;
+package com.example.dividend.persist;
 
+import com.example.dividend.persist.entity.DividendEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

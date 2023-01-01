@@ -13,7 +13,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
+@Component      // Bean으로 사용하기 위해
 public class YahooFinanceScraper implements Scraper {
 
     private static final String STATISTICS_URL = "https://finance.yahoo.com/quote/%s/"
@@ -65,7 +67,7 @@ public class YahooFinanceScraper implements Scraper {
                         .build());
 
             }
-            scrapResult.setDividendEntities(dividends);
+            scrapResult.setDividends(dividends);
 
         } catch (IOException e) {
             // TODO
