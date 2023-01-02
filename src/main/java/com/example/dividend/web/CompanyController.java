@@ -1,8 +1,12 @@
 package com.example.dividend.web;
 
 import com.example.dividend.model.Company;
+import com.example.dividend.persist.entity.CompanyEntity;
 import com.example.dividend.service.CompanyService;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,8 +32,9 @@ public class CompanyController {
 
     // 회사 조회 API (검색)
     @GetMapping
-    public ResponseEntity<?> searchCompany() {
-        return null;
+    public ResponseEntity<?> searchCompany(final Pageable pageable) {
+        Page<CompanyEntity> companies = this.companyService.getAllCompany(pageable);
+        return ResponseEntity.ok(companies);
     }
 
     // 저장
