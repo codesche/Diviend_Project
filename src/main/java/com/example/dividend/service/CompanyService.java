@@ -10,15 +10,19 @@ import com.example.dividend.scraper.Scraper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+// Service는 싱글톤으로 관리됨
 @Service
 @AllArgsConstructor
 public class CompanyService {
 
+    private final Trie trie;
     private final Scraper yahooFinanceScraper;
 
     private final CompanyRepository companyRepository;
@@ -57,5 +61,33 @@ public class CompanyService {
         this.dividendRepository.saveAll(dividendEntityList);
         return company;
     }
+
+    public List<String> getCompanyNamesByKeyword(String keyword) {
+        Pageable limit = PageRequest.of(0, 10);
+        Page<CompanyEntity> companyEntities =
+            this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
+
+        return companyEntities.stream()
+                            .map(e -> e.getName())
+                            .collect(Collectors.toList());
+    }
+
+    // Trie 통한 데이터 저장
+    public void addAutoCompleteKeyword(String keyword) {
+        this.trie.put(keyword, null);
+    }
+
+    // Trie에서 단어를 찾아오는 로직
+    public List<String> autocomplete(String keyword) {
+        return (List<String>) this.trie.prefixMap(keyword).keySet()
+            .stream()
+            .limit(10)
+            .collect(Collectors.toList());
+    }
+
+    public void deleteAutoCompleteKeyword(String keyword) {
+        this.trie.remove(keyword);
+    }
+
 
 }
