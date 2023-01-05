@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping
+@RequestMapping("finance")
 @AllArgsConstructor
 
 public class FinanceController {
@@ -18,7 +18,7 @@ public class FinanceController {
     private final FinanceService financeService;
 
     // 배당금 조회 API
-    @GetMapping("/finance/dividend/{companyName}")
+    @GetMapping("/dividend/{companyName}")
     public ResponseEntity<?> searchFinance(@PathVariable String companyName) {
         var result = this.financeService.getDividendByCompanyName(companyName);
         return ResponseEntity.ok(result);
