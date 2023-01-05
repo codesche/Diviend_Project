@@ -24,6 +24,9 @@ public class CacheConfig {
     @Value("${spring.redis.port}")
     private int port;
 
+    @Value("redispass")
+    private String password;
+
     @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration conf = RedisCacheConfiguration.defaultCacheConfig()
@@ -38,11 +41,12 @@ public class CacheConfig {
                                 .build();
     }
 
-    @Bean
+    @Bean         //레디스 서버와 연결 관리를 위한 빈을 생성
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration conf = new RedisStandaloneConfiguration();
         conf.setHostName(this.host);
         conf.setPort(this.port);
+        conf.setPassword(password);
         return new LettuceConnectionFactory(conf);          // Redis Connection
     }
 
