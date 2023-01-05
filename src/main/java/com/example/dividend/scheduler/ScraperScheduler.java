@@ -24,16 +24,6 @@ public class ScraperScheduler {
 
     private final Scraper yahooFinanceScraper;
 
-    @Scheduled(fixedDelay = 1000)
-    public void test1() throws InterruptedException {
-        Thread.sleep(10000);        // 10초간 일시정지
-        System.out.println(Thread.currentThread().getName() + " -> 테스트 1 : " + LocalDateTime.now());
-    }
-
-    @Scheduled(fixedDelay = 1000)
-    public void test2() {
-        System.out.println(Thread.currentThread().getName() + " -> 테스트 2 : " + LocalDateTime.now());
-    }
 
 
 
@@ -47,10 +37,8 @@ public class ScraperScheduler {
 
         // 회사마다 배당금 정보를 새로 스크래핑
         for (var company : companies) {
-            ScrapedResult scrapedResult = this.yahooFinanceScraper.scrap(Company.builder()
-                                                .name(company.getName())
-                                                .ticker(company.getTicker())
-                                                .build());
+            ScrapedResult scrapedResult = this.yahooFinanceScraper.scrap(
+                                            new Company(company.getTicker(), company.getName()));
 
             // 스크래핑한 배당금 정보 중 데이터베이스에 없는 값은 저장
             scrapedResult.getDividends().stream()
