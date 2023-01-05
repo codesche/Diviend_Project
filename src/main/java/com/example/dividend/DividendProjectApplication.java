@@ -12,8 +12,5 @@ public class DividendProjectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DividendProjectApplication.class, args);
-
-        System.out.println("Main -> " + Thread.currentThread().getName());
-
     }
 }
