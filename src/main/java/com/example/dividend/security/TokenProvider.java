@@ -1,5 +1,6 @@
 package com.example.dividend.security;
 
+import com.example.dividend.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +21,8 @@ public class TokenProvider {
 
     private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60;       // 1 hour
     private static final String KEY_ROLES = "roles";
+
+    private final MemberService memberService;
 
     @Value("{spring.jwt.secret}")
     private String secretKey;
@@ -40,6 +46,13 @@ public class TokenProvider {
 
     }
 
+    public Authentication getAuthentication(String jwt) {
+        UserDetails userDetails = this.memberService.loadUserByUsername(this.getUsername(jwt));
+        return new UsernamePasswordAuthenticationToken(
+            // 스프링에서 지원해주는 형태의 토큰
+            userDetails, "", userDetails.getAuthorities());
+    }
+
     public String getUsername(String token) {
         return this.parseClaims(token).getSubject();
     }
@@ -53,6 +66,7 @@ public class TokenProvider {
 
     private Claims parseClaims(String token) {
         try {
+            // 토큰이 만료된 상태에서 파싱할 경우 에러 발생
             return Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
             // TODO

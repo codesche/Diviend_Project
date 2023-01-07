@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,8 +34,8 @@ public class MemberEntity implements UserDetails {
 
     private String password;
 
-    @ElementCollection
-    private List<String> roles;             // ready, write 권환 두개다 가질수 있으므로
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;             // ready, write 권한 두개다 가질수 있으므로
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
